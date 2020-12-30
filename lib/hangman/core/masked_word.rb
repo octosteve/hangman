@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Core
   class MaskedWord
     attr_reader :word, :turns
@@ -13,10 +15,11 @@ module Core
     def call
       (method(:mark_found_letters) >> \
        method(:transform_to_masked_value))
-         .call(word, turns)
+        .call(word, turns)
     end
 
     private
+
     def upcase_found_letter(word, guess)
       word.gsub(guess) { _1.upcase }
     end

@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 module Boundary
   class GameServer
     attr_reader :name
+
     def initialize(name:)
       @name = name
       @ractor = create_ractor
@@ -20,7 +23,7 @@ module Boundary
       Ractor.receive
     end
 
-    def get_word
+    def word
       ractor.send([:get_word, Ractor.current])
       Ractor.receive
     end
@@ -28,26 +31,31 @@ module Boundary
     def create_ractor
       words_path = "#{File.expand_path(__dir__)}/../../../assets/words.txt"
       word_list = File.readlines(words_path).map(&:strip)
-      Ractor.new(word_list, name: name) do |word_list| 
+      Ractor.new(word_list, name: name) do |word_list|
         game = Core::Game.start_game(name, word_list)
-        loop do
-          case Ractor.receive
-          in [:make_guess, guess]
-            game.make_guess(guess)
-          in [:won?, from]
-            from.send game.won?
-          in [:lost?, from]
-            from.send game.lost?
-          in [:get_word, from]
-            from.send game.selected_word
-          in [:get_masked_word, from]
-            from.send game.masked_word
-          end
-        end
+        receive_loop(game)
       end
     end
 
     private
+
     attr_reader :ractor
+
+    def receive_loop(game)
+      loop do
+        case Ractor.receive
+        in [:make_guess, guess]
+          game.make_guess(guess)
+        in [:won?, from]
+          from.send game.won?
+        in [:lost?, from]
+          from.send game.lost?
+        in [:get_word, from]
+          from.send game.selected_word
+        in [:get_masked_word, from]
+          from.send game.masked_word
+        end
+      end
+    end
   end
 end

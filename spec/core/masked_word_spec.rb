@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Core::MaskedWord do
   it "surfaces masked word" do
     game = Core::Game.start_game("Steven's game")

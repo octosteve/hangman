@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Core
   class WordList
     def self.get_word(word_list)
@@ -5,7 +7,7 @@ module Core
     end
 
     def initialize(word_list)
-      @word_list = word_list.reject {_1.length < 5}
+      @word_list = word_list.reject { _1.length < 5 }
     end
 
     def get_word
@@ -13,6 +15,7 @@ module Core
     end
 
     private
+
     attr_reader :word_list
   end
 end

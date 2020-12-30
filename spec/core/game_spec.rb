@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Core::Game do
   it "captures a game's name on start" do
     game = Core::Game.new("Steven's game", [])
@@ -46,9 +48,9 @@ RSpec.describe Core::Game do
     game._set_selected_word("people")
 
     ("a".."z")
-      .reject {"people".include?(_1)}
+      .reject { "people".include?(_1) }
       .take(10)
-      .each { game.make_guess(_1)}
+      .each { game.make_guess(_1) }
 
     expect(game).to be_lost
     expect(game).to_not be_won
@@ -59,9 +61,9 @@ RSpec.describe Core::Game do
     game._set_selected_word("people")
 
     ("a".."z")
-      .reject {"people".include?(_1)}
+      .reject { "people".include?(_1) }
       .take(6)
-      .each { game.make_guess(_1)}
+      .each { game.make_guess(_1) }
 
     game.make_guess("p")
     game.make_guess("e")
@@ -76,15 +78,15 @@ RSpec.describe Core::Game do
     game._set_selected_word("people")
     game.make_guess("p")
     game.make_guess("p")
-    expect( game.guesses).to eq(["p"])
+    expect(game.guesses).to eq(["p"])
   end
 
   it "knows how many guesses you have left" do
     game = Core::Game.start_game("Steven's game")
     game._set_selected_word("people")
     game.make_guess("p")
-    #game.make_guess("p")
-    expect( game.guesses_left).to eq(Core::Game::MAX_GUESSES - 1)
+    # game.make_guess("p")
+    expect(game.guesses_left).to eq(Core::Game::MAX_GUESSES - 1)
   end
 
   it "does not penalize you if you repeat a letter" do
@@ -92,6 +94,6 @@ RSpec.describe Core::Game do
     game._set_selected_word("people")
     game.make_guess("p")
     game.make_guess("p")
-    expect( game.guesses_left).to eq(Core::Game::MAX_GUESSES - 1)
+    expect(game.guesses_left).to eq(Core::Game::MAX_GUESSES - 1)
   end
 end

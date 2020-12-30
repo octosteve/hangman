@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module Core
   class Game
-    require 'set'
+    require "set"
     MAX_GUESSES = 10
     attr_reader :name, :selected_word, :word_list, :turns, :guesses_left
     def self.default_word_list
@@ -37,6 +39,7 @@ module Core
     def _set_selected_word(selected_word) = @selected_word = selected_word
 
     private
+
     def report = Report.generate(self)
 
     def default_word_list

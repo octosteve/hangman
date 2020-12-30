@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Core
   class Turn
     attr_reader :game, :guess, :hit
@@ -8,10 +10,11 @@ module Core
     def initialize(game, guess)
       @game = game
       @guess = guess
-      @hit = calculate_hit()
+      @hit = calculate_hit
     end
 
     private
+
     def calculate_hit
       game.selected_word.include?(guess)
     end

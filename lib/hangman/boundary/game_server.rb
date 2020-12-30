@@ -28,6 +28,10 @@ module Boundary
       Ractor.receive
     end
 
+    private
+
+    attr_reader :ractor
+
     def create_ractor
       words_path = "#{File.expand_path(__dir__)}/../../../assets/words.txt"
       word_list = File.readlines(words_path).map(&:strip)
@@ -36,10 +40,6 @@ module Boundary
         receive_loop(game)
       end
     end
-
-    private
-
-    attr_reader :ractor
 
     def receive_loop(game)
       loop do

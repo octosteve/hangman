@@ -18,9 +18,7 @@ RSpec.describe Core::Game do
   it "captures guesses" do
     game = Core::Game.start_game("Steven's game")
     game.make_guess("b")
-#    expect(game).to_not be_won
     expect(game.guesses).to eq(["b"])
-#    expect(game.masked_word).to eq("b*****")
   end
 
   it "reveals masked word if guess is correct" do
@@ -79,5 +77,21 @@ RSpec.describe Core::Game do
     game.make_guess("p")
     game.make_guess("p")
     expect( game.guesses).to eq(["p"])
+  end
+
+  it "knows how many guesses you have left" do
+    game = Core::Game.start_game("Steven's game")
+    game._set_selected_word("people")
+    game.make_guess("p")
+    #game.make_guess("p")
+    expect( game.guesses_left).to eq(Core::Game::MAX_GUESSES - 1)
+  end
+
+  it "does not penalize you if you repeat a letter" do
+    game = Core::Game.start_game("Steven's game")
+    game._set_selected_word("people")
+    game.make_guess("p")
+    game.make_guess("p")
+    expect( game.guesses_left).to eq(Core::Game::MAX_GUESSES - 1)
   end
 end

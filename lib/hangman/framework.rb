@@ -2,3 +2,4 @@
 
 require_relative "framework/registry"
 require_relative "framework/task"
+require_relative "framework/supervisor"

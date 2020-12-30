@@ -4,7 +4,7 @@ module Framework
       registry = new
       Ractor.new(registry) do |registry|
         loop do
-          case Ractor.receive
+          case receive
           in [:get, name, from]
             from.send registry.get(name)
           in [:remove, name]

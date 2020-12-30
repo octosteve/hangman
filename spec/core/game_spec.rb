@@ -1,6 +1,6 @@
 RSpec.describe Core::Game do
   it "captures a game's name on start" do
-    game = Core::Game.new("Steven's game")
+    game = Core::Game.new("Steven's game", [])
     expect(game.name).to eq("Steven's game")
   end
 

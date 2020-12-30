@@ -2,19 +2,25 @@ module Core
   class Game
     require 'set'
     MAX_GUESSES = 10
-    attr_reader :name, :selected_word, :turns, :guesses_left
-    def self.start_game(name)
-      game = new(name)
+    attr_reader :name, :selected_word, :word_list, :turns, :guesses_left
+    def self.default_word_list
+      words_path = "#{File.expand_path(__dir__)}/../../../assets/words.txt"
+      word_list = File.readlines(words_path)
+    end
+
+    def self.start_game(name, word_list = default_word_list)
+      game = new(name, word_list)
       game.start
       game
     end
 
-    def initialize(name)
+    def initialize(name, word_list)
       @name = name
+      @word_list = word_list
       @turns = []
     end
 
-    def start = @selected_word ||= WordList.get_word
+    def start = @selected_word ||= WordList.get_word(word_list)
 
     def make_guess(guess) = @turns << Turn.take(self, guess)
 
@@ -32,5 +38,10 @@ module Core
 
     private
     def report = Report.generate(self)
+
+    def default_word_list
+      words_path = "#{File.expand_path(__dir__)}/../../../assets/words.txt"
+      word_list = File.readlines(words_path)
+    end
   end
 end

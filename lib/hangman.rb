@@ -11,3 +11,5 @@ module Hangman
     Boundary::GameServer.new(name: name)
   end
 end
+
+GOD = Framework::Supervisor.start([])

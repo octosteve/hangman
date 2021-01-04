@@ -37,27 +37,35 @@ module Boundary
 
     attr_reader :ractor
 
-    def create_ractor
-      words_path = "#{File.expand_path(__dir__)}/../../../assets/words.txt"
-      word_list = File.readlines(words_path).map(&:strip)
-      Ractor.new(word_list, name: name) do |word_list|
+    class GSRactor
+      def self.call(word_list, name:)
         game = Core::Game.start_game(name, word_list)
-        loop do
-          case receive
-          in [:make_guess, guess]
-            game.make_guess(guess)
-          in [:won?, from]
-            from.send game.won?
-          in [:lost?, from]
-            from.send game.lost?
-          in [:get_word, from]
-            from.send game.selected_word
-          in [:get_masked_word, from]
-            from.send game.masked_word
+        Ractor.new(game, name: name) do |game|
+          loop do
+            case receive
+            in [:make_guess, "h"]
+              raise "I HATE H"
+            in [:make_guess, guess]
+              game.make_guess(guess)
+            in [:won?, from]
+              from.send game.won?
+            in [:lost?, from]
+              from.send game.lost?
+            in [:get_word, from]
+              from.send game.selected_word
+            in [:get_masked_word, from]
+              from.send game.masked_word
+            end
           end
         end
       end
     end
+    def create_ractor
+      words_path = "#{File.expand_path(__dir__)}/../../../assets/words.txt"
+      word_list = File.readlines(words_path).map(&:strip)
+      child_spec = Framework::Supervisor::ChildSpec.new(name, GSRactor, :call, [word_list])
 
+      Framework::Supervisor.add_child(GOD, child_spec)
+    end
   end
 end

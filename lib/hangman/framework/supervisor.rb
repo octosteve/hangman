@@ -8,6 +8,8 @@ module Framework
           case Ractor.receive
           in [:get_children, from]
             from.send(supervisor.children)
+          in [:add_child, ChildSpec => child_spec, from]
+            from.send(supervisor.add_child(child_spec))
           in [:crash, ractor_name]
             supervisor.restart_child(ractor_name)
           end
@@ -17,6 +19,11 @@ module Framework
 
     def self.get_children(supervisor)
       supervisor.send([:get_children, Ractor.current])
+      Ractor.receive
+    end
+
+    def self.add_child(supervisor, child_spec)
+      supervisor.send([:add_child, child_spec, Ractor.current])
       Ractor.receive
     end
 
@@ -36,8 +43,14 @@ module Framework
       end
     end
 
+    def add_child(child_spec)
+      child_specs << child_spec
+      
+      start_child(child_spec)
+    end
+
     def restart_child(child_name)
-      start_child(child_specs.find {_1.id == child_name})
+      start_child(child_specs.find(:child_not_found) {_1.id == child_name})
     end
 
     def start_child(child)
@@ -47,6 +60,7 @@ module Framework
       name = child.id
       server = object.public_send(action, *args, name: name)
       track(server)
+      server
     end
 
     private
